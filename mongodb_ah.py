@@ -19,9 +19,12 @@ def get_collection():
 
     return collection
 
-def get_all_items_in_collection(collection):
-    return list(collection.find({},{"_id" : 0, "last_match": 0}))
-
+def get_all_items_in_collection(collection, include_last_match):
+    if include_last_match == True:
+        return list(collection.find({},{"_id" : 0 }))
+    else:
+        return list(collection.find({},{"_id" : 0, "last_match": 0, "alert": 0}))
+        
 def insert_item(collection, item):
     collection.insert_one(item)
 
@@ -31,6 +34,16 @@ def update_item(collection, item_id, new_name, new_price):
         "$set": {
              "name" : f"{new_name}",
              "price": f"{new_price}",
+        } 
+    }
+    collection.update_one(query, new_value)
+
+def update_last_match(collection, item_id, item_last_match, total_result):
+    query = { "id": f"{item_id}" }
+    new_value = { 
+        "$set": {
+             "last_match" : f"{item_last_match}",
+             "total_result": f"{total_result}",
         } 
     }
     collection.update_one(query, new_value)
