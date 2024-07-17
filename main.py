@@ -149,7 +149,7 @@ def discord_run():
 
               #If first result price is lower or equal to watch price, then alert channel
               if lowest_price <= item_price:
-                await channel.send(f"{item_name} is at {lowest_price}")
+                await channel.send(f"{item_name} is at {lowest_price:,}")
 
           #Update the last_match time to the current time and new total result
           update_last_match(collection, item_id, current_time, new_total_result)
