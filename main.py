@@ -9,10 +9,10 @@ from query_mabi_base import *
 logger = settings.logging.getLogger("bot")
 collection = get_collection()
 
-###
+#-----------------------------------------
 # Class:       AddItemModal
 # Description: Use for ah_add_item command
-###
+#-----------------------------------------
 
 class AddItemModal(discord.ui.Modal, title="Add Item"):
     item_name  = discord.ui.TextInput(label="Item Name", required=True, max_length=100, style=discord.TextStyle.short)
@@ -31,17 +31,17 @@ class AddItemModal(discord.ui.Modal, title="Add Item"):
             "total_result": f"{total_result}"
         }
         insert_item(collection, item)
-        await interaction.response.send_message(f"Added: {self.item_name} ({self.item_id}) at {self.item_price} by {interaction.user.mention}")
+        await interaction.response.send_message(f"Added: `{self.item_name}` (ID: `{self.item_id}`) at `{self.item_price}` by {interaction.user.mention}")
         
     async def on_error(self, interaction: discord.Interaction, error):
         await interaction.response.send_message(f"An error occurred: {error}", ephemeral=True)
         logger.error(f"Error in AddItemModal: {error}")
 
 
-###
+#-----------------------------------------
 # Class:       EditItemModal
 # Description: Use for ah_edit_item command.
-###
+#-----------------------------------------
 
 class EditItemModal(discord.ui.Modal):
     def __init__(self, item_name, item_id, item_price):
@@ -71,22 +71,22 @@ class EditItemModal(discord.ui.Modal):
     async def on_submit(self, interaction: discord.Interaction):
         original_item_name_value  = self.original_item_name_value
         original_item_price_value = self.original_item_price_value
-        new_item_name_value       = self.item_name_input.value
-        new_item_price_value      = self.item_price_input.value
+        new_item_name_value       = self.new_item_name.value
+        new_item_price_value      = self.new_item_price.value
         item_id_value             = self.item_id_value
 
         update_item(collection, item_id_value, new_item_name_value, new_item_price_value)
 
-        await interaction.response.send_message(f"Edited: {original_item_name_value}->{new_item_name_value} (ID: {item_id_value}) from {original_item_price_value}->{new_item_price_value} by {interaction.user.mention}")
+        await interaction.response.send_message(f"Edited: `{original_item_name_value}` -> `{new_item_name_value}` (ID: `{item_id_value}`) from `{original_item_price_value}` -> `{new_item_price_value}` by {interaction.user.mention}")
         
     async def on_error(self, interaction: discord.Interaction, error):
         await interaction.response.send_message(f"An error occurred: {error}", ephemeral=True)
         logger.error(f"Error in EditItemModal: {error}")
 
-###
+#-----------------------------------------
 # Function: discord_run()
 # Commands: ah_ping, ah_list, ah_add_item, ah_edit_item, ah_delete_item
-###
+#-----------------------------------------
 
 def discord_run():
     bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
