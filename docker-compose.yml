@@ -1,0 +1,6 @@
+services:
+  mabi-ah-discord:
+    image: dqle/mabi-ah-discord:latest
+    restart: unless-stopped
+    env_file:
+      - .env
