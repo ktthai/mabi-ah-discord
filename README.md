@@ -7,6 +7,11 @@ This bot alert faster than the MabiBase built-in alerting function as this will 
 
 https://github.com/user-attachments/assets/358889d6-3a1b-47ae-baa8-946c385c0714
 
+When an item is posted on Auction House and matches our criteria:
+
+<img src="./repo_media/alert-match.png" width=70% height=70% />
+
+
 # How to use
 
 ## Creating and Inviting a Private Discord Bot
@@ -76,10 +81,10 @@ DISCORD_SERVER_ID         = ""
 DISCORD_CHANNEL_ID        = ""
 MONGODB_CONNECTION_STRING = ""
 ```
- - `DISCORD_API_TOKEN` is generated from step 8 of `Creating and Inviting a Private Discord Bot` Section
+ - `DISCORD_API_TOKEN` is generated from step 8 of [Creating and Inviting a Private Discord Bot](#creating-and-inviting-a-private-discord-bot) Section
  - `DISCORD_SERVER_ID` can be found by right click your server where you add the bot and click `Copy Server ID`
  - `DISCORD_CHANNEL_ID` is the channel where you want the alert to go to. This can be found by right click your channel and click `Copy Channel ID`
- - `MONGODB_CONNECTION_STRING` is generated from step 8 of `Creating a free MongoDB Atlas instance` Section
+ - `MONGODB_CONNECTION_STRING` is generated from step 8 of [Creating a free MongoDB Atlas instance](#creating-a-free-mongodb-atlas-instance) Section
 
  3. Install requirements and run the program:
  ```
@@ -98,10 +103,10 @@ DISCORD_SERVER_ID         = ""
 DISCORD_CHANNEL_ID        = ""
 MONGODB_CONNECTION_STRING = ""
 ```
- - `DISCORD_API_TOKEN` is generated from step 8 of `Creating and Inviting a Private Discord Bot` Section
+ - `DISCORD_API_TOKEN` is generated from step 8 of [Creating and Inviting a Private Discord Bot](#creating-and-inviting-a-private-discord-bot) Section
  - `DISCORD_SERVER_ID` can be found by right click your server where you add the bot and click `Copy Server ID`
  - `DISCORD_CHANNEL_ID` is the channel where you want the alert to go to. This can be found by right click your channel and click `Copy Channel ID`
- - `MONGODB_CONNECTION_STRING` is generated from step 8 of `Creating a free MongoDB Atlas instance` Section
+ - `MONGODB_CONNECTION_STRING` is generated from step 8 of [Creating a free MongoDB Atlas instance](#creating-a-free-mongodb-atlas-instance) Section
 
 3. Run docker compose:
 
@@ -110,3 +115,29 @@ docker compose up -d
 ```
 
 ## Usage - Helm Chart
+
+1. Create a `values.yaml` file containing the following:
+
+```
+env:
+  DISCORD_API_TOKEN         = ""
+  DISCORD_SERVER_ID         = ""
+  DISCORD_CHANNEL_ID        = ""
+  MONGODB_CONNECTION_STRING = ""
+```
+ - `DISCORD_API_TOKEN` is generated from step 8 of [Creating and Inviting a Private Discord Bot](#creating-and-inviting-a-private-discord-bot) Section
+ - `DISCORD_SERVER_ID` can be found by right click your server where you add the bot and click `Copy Server ID`
+ - `DISCORD_CHANNEL_ID` is the channel where you want the alert to go to. This can be found by right click your channel and click `Copy Channel ID`
+ - `MONGODB_CONNECTION_STRING` is generated from step 8 of [Creating a free MongoDB Atlas instance](#creating-a-free-mongodb-atlas-instance) Section
+
+2. Add helm chart:
+
+```
+helm repo add dqle https://dqle.github.io/helm-charts/
+helm repo update
+```
+
+3. Install helm chart:
+```
+helm install mabi-ah-discord dqle/mabi-ah-discord -f values.yaml -n mabi-ah-discord --create-namespace
+```
