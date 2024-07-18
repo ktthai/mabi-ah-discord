@@ -1,0 +1,4 @@
+requests
+pymongo
+load_dotenv
+discord.py[voice]
