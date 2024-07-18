@@ -1,0 +1,8 @@
+apiVersion: v2
+name: mabi-ah-discord
+appVersion: "1.0.1"
+version: 1.0.0
+description: A Helm chart for Mabi-AH-Discord
+home: https://github.com/dqle/mabi-ah-discord
+maintainers:
+- name: Duc Le
