@@ -101,16 +101,24 @@ def discord_run():
         logger.info(f"User: {bot.user} (ID: {bot.user.id})" )
         if not ah_alert_channel.is_running():
             ah_alert_channel.start()
-    
+
     @bot.command()
     async def ah_ping(ctx):
         """ Answers with pong """
         await ctx.send("pong")
-    
+
     @bot.tree.command()
     async def ah_list(interaction: discord.Interaction):
-        ah_list = get_all_items_in_collection(get_collection(), False)
-        await interaction.response.send_message("Currently Watching: ```{}```".format(json.dumps(ah_list, indent=2)))
+        try:
+            # Defer the interaction to allow more time for processing
+            await interaction.response.defer()
+            ah_list = get_all_items_in_collection(get_collection(), False)
+            # Send the final response using follow-up
+            await interaction.followup.send(f"Currently Watching: ```{json.dumps(ah_list, indent=2)}```")
+        except discord.errors.InteractionResponded:
+            print("This interaction has already been responded to before.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     @bot.tree.command()
     async def ah_add_item(interaction: discord.Interaction):
@@ -118,14 +126,38 @@ def discord_run():
 
     @bot.tree.command()
     async def ah_edit_item(interaction: discord.Interaction, item_id: int):
+        # Attempt to find the item by ID in the collection
         item = find_item_by_id(item_id, collection)
+        
+        # Check if the item exists
+        if item is None:
+            await interaction.response.send_message(
+                f"Item with ID {item_id} not found.", ephemeral=True
+            )
+            return
+
+        # If the item is found, proceed to send the modal for editing
         await interaction.response.send_modal(EditItemModal(item['name'], item['id'], item['price']))
 
     @bot.tree.command()
     async def ah_delete_item(interaction: discord.Interaction, item_id: int):
+        # Attempt to find the item by ID in the collection
         item = find_item_by_id(item_id, collection)
+        
+        # Check if the item was found
+        if item is None:
+            await interaction.response.send_message(
+                f"Item with ID {item_id} not found.", ephemeral=True
+            )
+            return
+
+        # If item is found, proceed to delete it
         delete_item(collection, item_id)
-        await interaction.response.send_message(f"Delete Item: {item['name']} ({item_id}) by {interaction.user.mention}")
+        
+        # Respond with a confirmation message
+        await interaction.response.send_message(
+            f"Deleted Item: {item['name']} ({item_id}) by {interaction.user.mention}"
+        )
 
     @tasks.loop(seconds=5)
     async def ah_alert_channel():
